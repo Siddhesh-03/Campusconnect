@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'SearchScreen/searchscreen.dart';
-import 'eventscreen.dart';
-import 'notificationscreen.dart';
+import 'EventScreen/eventscreen.dart';
+import 'NotificationScreen/notificationscreen.dart';
 import 'profilescreen.dart';
 import 'chatscreen.dart';
 import 'homescreen.dart';
@@ -49,32 +49,4 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class Profilescreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.purple.shade700,
-      appBar: AppBar(
-        title: Text("Profile"),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/images/logo.png'),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "User Name",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
+

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'SearchScreen/searchscreen.dart';
-import 'eventscreen.dart';
-import 'notificationscreen.dart';
+import 'EventScreen/eventscreen.dart';
+import 'NotificationScreen/notificationscreen.dart';
 import 'profilescreen.dart';
 import 'chatscreen.dart'; // ✅ Import Chat Screen
 
 class HomeFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildHeader(context),
-        SizedBox(height: 10),
-        _buildStorySection(context), // Story Section
-        _shadedDivider(), // 🔹 Shaded Divider
-        _buildPostSection(context), // Post Section
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          _buildHeader(context),
+          SizedBox(height: 10),
+          _buildStorySection(context), // Story Section
+
+          Expanded(child: _buildPostSection(context)), // Ensure full scrollability
+        ],
+      ),
     );
   }
 
@@ -53,19 +55,19 @@ class HomeFeedScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              'Trending Stories',
+              'Stories',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
             ),
           ),
           SizedBox(height: 8),
           SizedBox(
-            height: 190,
+            height: 180, // Adjusted height to prevent overflow
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
                 _buildStoryItem(context, 'News', 'assets/images/news.png'),
-                _buildStoryItem(context, 'Event at MiT', 'assets/images/event_mit.png'),
-                _buildStoryItem(context, 'Event', 'assets/images/event.png'),
+                _buildStoryItem(context, 'Event at MiT', 'assets/images/mit.png'),
+                _buildStoryItem(context, 'Event', 'assets/images/sportsevent.png'),
               ],
             ),
           ),
@@ -76,44 +78,51 @@ class HomeFeedScreen extends StatelessWidget {
 
   // 🔹 Story Item Widget
   Widget _buildStoryItem(BuildContext context, String title, String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        children: [
-          Card(
-            elevation: 3,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: SizedBox(
-              width: 120,
-              height: 160,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.cover,
-                  errorBuilder: (ctx, error, stacktrace) {
-                    debugPrint('Error loading image: $error');
-                    return _errorImagePlaceholder(context);
-                  },
+    return GestureDetector(
+      onTap: () => _showFullImage(context, imagePath),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6), // Adjusted padding
+        child: Column(
+          children: [
+            Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: SizedBox(
+                width: 110, // Adjusted width
+                height: 130, // Adjusted height
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    imagePath,
+                    fit: BoxFit.cover,
+                    errorBuilder: (ctx, error, stacktrace) {
+                      debugPrint('Error loading image: $error');
+                      return _errorImagePlaceholder(context);
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 5),
-          Text(title, style: TextStyle(color: Colors.white)),
-        ],
+            SizedBox(height: 5),
+            Text(title, style: TextStyle(color: Colors.white)),
+          ],
+        ),
       ),
     );
   }
 
-  // 🔹 Shaded Divider (Gradient Effect)
-  Widget _shadedDivider() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      height: 4,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.transparent, Colors.white38, Colors.transparent],
+  // 🔹 Show Full Image Popup
+  void _showFullImage(BuildContext context, String imagePath) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            imagePath,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
@@ -121,15 +130,10 @@ class HomeFeedScreen extends StatelessWidget {
 
   // 🔹 Post Section
   Widget _buildPostSection(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(top: 10),
-        color: Colors.black.withOpacity(0.05),
-        child: ListView.builder(
-          itemCount: 3, // Simulating multiple posts
-          itemBuilder: (context, index) => _buildPost(context, index),
-        ),
-      ),
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: 3, // Simulating multiple posts
+      itemBuilder: (context, index) => _buildPost(context, index),
     );
   }
 
@@ -137,7 +141,7 @@ class HomeFeedScreen extends StatelessWidget {
   Widget _buildPost(BuildContext context, int index) {
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      elevation: 3,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -166,7 +170,22 @@ class HomeFeedScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(icon: Icon(Icons.thumb_up, color: Colors.grey), onPressed: () {}),
+                StatefulBuilder(
+                  builder: (context, setState) {
+                    bool isLiked = false;
+                    return IconButton(
+                      icon: Icon(
+                        Icons.thumb_up,
+                        color: isLiked ? Colors.blue : Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          isLiked = !isLiked;
+                        });
+                      },
+                    );
+                  },
+                ),
                 IconButton(icon: Icon(Icons.comment, color: Colors.grey), onPressed: () {}),
                 IconButton(icon: Icon(Icons.share, color: Colors.grey), onPressed: () {}),
               ],
@@ -194,3 +213,4 @@ class HomeFeedScreen extends StatelessWidget {
     );
   }
 }
+

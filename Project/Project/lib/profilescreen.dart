@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'settingsscreen.dart'; // Import the Settings Screen
 import 'editprofilescreen.dart'; // Import the Edit Profile Screen
 
 class Profilescreen extends StatelessWidget {
+  final Map<String, String> socialLinks = {
+    "GitHub": "https://github.com/example",
+    "LinkedIn": "https://linkedin.com/in/example",
+    "Instagram": "https://instagram.com/example",
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,16 +42,10 @@ class Profilescreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text("Atharva Rasal", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
-            Text("@atharva_1", style: TextStyle(color: Colors.white70, fontSize: 16)),
             SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.business, color: Colors.white),
-                SizedBox(width: 5),
-                Text("MIT-WPU", style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-              ],
-            ),
+            Text("Bio goes here", style: TextStyle(color: Colors.white70, fontSize: 16)),
+            SizedBox(height: 10),
+            Icon(Icons.insert_drive_file, color: Colors.white, size: 30), // Resume Icon
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
@@ -61,39 +62,93 @@ class Profilescreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
+              child: DefaultTabController(
+                length: 2,
                 child: Column(
                   children: [
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text("POST", style: TextStyle(fontWeight: FontWeight.bold)),
-                        Text("Activity", style: TextStyle(color: Colors.grey)),
+                    TabBar(
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey,
+                      indicatorColor: Colors.black,
+                      tabs: [
+                        Tab(text: "POST"),
+                        Tab(text: "SOCIALS"),
                       ],
                     ),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    Expanded(
+                      child: TabBarView(
                         children: [
-                          Text("I attended Google DevFest 2024 in Pune, and what a fantastic event it was..."),
-                          SizedBox(height: 10),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              'https://example.com/event_pic.jpg', // Replace with actual image
-                              height: 200,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
+                          // Posts Tab
+                          SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 5,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("I attended Google DevFest 2024 in Pune, and what a fantastic event it was..."),
+                                    SizedBox(height: 10),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        'https://example.com/event_pic.jpg', // Replace with actual image
+                                        height: 200,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          // Socials Tab
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: socialLinks.entries.map((entry) {
+                                  return Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    padding: EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 5,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: ListTile(
+                                      leading: Icon(Icons.link, color: Colors.black),
+                                      title: Text(entry.key, style: TextStyle(fontWeight: FontWeight.bold)),
+                                      subtitle: Text(entry.value, style: TextStyle(color: Colors.blue)),
+                                      onTap: () async {
+                                        final url = entry.value;
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        }
+                                      },
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
                             ),
                           ),
                         ],

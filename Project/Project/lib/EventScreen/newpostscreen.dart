@@ -112,22 +112,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.grey[200],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Icon(Icons.home, size: 30),
-              Icon(Icons.search, size: 30),
-              Icon(Icons.calendar_month, size: 30),
-              Icon(Icons.notifications, size: 30),
-              Icon(Icons.person, size: 30),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'connectionscreen.dart'; // Import the Peer Connection screen
+import 'connectionscreen.dart'; // Import Peer Connection screen
+import 'jobscreen.dart'; // Import the new Job screen
 
 class NotificationScreen extends StatelessWidget {
   @override
@@ -23,10 +24,9 @@ class NotificationScreen extends StatelessWidget {
               ),
               SizedBox(height: 16),
 
-              // Connection Request Section (Now Clickable)
+              // Connection Request Section (Clickable)
               GestureDetector(
                 onTap: () {
-                  // Navigate to Peer Connection Screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => PeerConnectionScreen()),
@@ -37,6 +37,32 @@ class NotificationScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Connection Request',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Icon(Icons.arrow_forward, color: Colors.white),
+                  ],
+                ),
+              ),
+              Divider(color: Colors.white),
+              SizedBox(height: 16),
+
+              // Jobs Section (New)
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => JobScreen()),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Jobs',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

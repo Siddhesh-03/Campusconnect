@@ -1,59 +1,38 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import '../homescreen.dart'; // Import your HomeScreen
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeFeedScreen()), // Navigate to HomeScreen
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF875774), // Background color from image
-      body: Stack(
-        children: [
-          // Top left circle
-          Positioned(
-            top: -50,
-            left: -50,
-            child: CircleAvatar(
-              radius: 100,
-              backgroundColor: Color(0xFFE5E5E5), // Light grey circle color
-            ),
-          ),
-
-          // Bottom right circle
-          Positioned(
-            bottom: -50,
-            right: -50,
-            child: CircleAvatar(
-              radius: 100,
-              backgroundColor: Color(0xFFE5E5E5),
-            ),
-          ),
-
-          // Centered logo
-          Center(
-            child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Color(0xFFF5E6EB), // Light pink background
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                "Campus Connect",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFAF7AC5), // Purple text color
-                ),
-              ),
-            ),
-          ),
-        ],
+      backgroundColor: Colors.deepPurple, // Customize color
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/splash_logo.png', width: 150), // Ensure image exists in assets
+            SizedBox(height: 20),
+            CircularProgressIndicator(color: Colors.white), // Loading indicator
+          ],
+        ),
       ),
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: SplashScreen(),
-  ));
 }

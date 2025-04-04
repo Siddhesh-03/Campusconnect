@@ -8,8 +8,33 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
-  List<String> allUsers = ['Vedant Chaudhari', 'Siddhesh Hule', 'John Doe', 'Jane Smith'];
-  List<String> filteredUsers = [];
+  List<Map<String, String>> allUsers = [
+    {
+      'name': 'Vedant Chaudhari',
+      'bio': 'Flutter Developer',
+      'profileImage': 'assets/images/default_avatar.png',
+      'resumeUrl': 'assets/resumes/vedant_resume.pdf'
+    },
+    {
+      'name': 'Siddhesh Hule',
+      'bio': 'Software Engineer',
+      'profileImage': 'assets/images/default_avatar.png',
+      'resumeUrl': 'assets/resumes/siddhesh_resume.pdf'
+    },
+    {
+      'name': 'John Doe',
+      'bio': 'Tech Enthusiast',
+      'profileImage': 'assets/images/default_avatar.png',
+      'resumeUrl': 'assets/resumes/john_resume.pdf'
+    },
+    {
+      'name': 'Jane Smith',
+      'bio': 'UI/UX Designer',
+      'profileImage': 'assets/images/default_avatar.png',
+      'resumeUrl': 'assets/resumes/jane_resume.pdf'
+    },
+  ];
+  List<Map<String, String>> filteredUsers = [];
 
   @override
   void initState() {
@@ -19,7 +44,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void _filterUsers(String query) {
     setState(() {
-      filteredUsers = allUsers.where((user) => user.toLowerCase().contains(query.toLowerCase())).toList();
+      filteredUsers = allUsers
+          .where((user) => user['name']!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     });
   }
 
@@ -53,15 +80,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundColor: Colors.purple,
-                    child: Text(filteredUsers[index][0]), // First letter as avatar
+                    backgroundImage: AssetImage(filteredUsers[index]['profileImage']!),
                   ),
-                  title: Text(filteredUsers[index]),
+                  title: Text(filteredUsers[index]['name']!),
                   onTap: () {
-                    // ✅ Navigate to Profile Screen with user name
+                    // ✅ Navigate to UserProfileScreen with user details
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ProfileScreenuser(userName: filteredUsers[index]),
+                        builder: (context) => UserProfileScreen(
+                          userName: filteredUsers[index]['name']!,
+                          bio: filteredUsers[index]['bio']!,
+                          profileImage: filteredUsers[index]['profileImage']!,
+                          resumeUrl: filteredUsers[index]['resumeUrl']!, // ✅ Now passing resumeUrl
+                        ),
                       ),
                     );
                   },
